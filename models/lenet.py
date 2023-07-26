@@ -1,0 +1,32 @@
+import torch.nn as nn
+
+class LeNet(nn.Module):
+    def __init__(self):
+        super(LeNet, self).__init__()
+        self.cnn1 = nn.Conv2d(
+            in_channels=3, out_channels=16, kernel_size=5, stride=1, padding=0
+        )
+        self.relu1 = nn.ReLU()
+        self.maxpool1 = nn.MaxPool2d(kernel_size=2)
+        self.cnn2 = nn.Conv2d(
+            in_channels=16, out_channels=32, kernel_size=5, stride=1, padding=0
+        )
+        self.relu2 = nn.ReLU()  # activation
+        self.maxpool2 = nn.MaxPool2d(kernel_size=2)
+        self.fc1 = nn.Linear(32 * 53 * 53, 512)
+        self.relu5 = nn.ReLU()
+        self.fc2 = nn.Linear(512, 2)
+        self.output = nn.Softmax(dim=1)
+
+    def forward(self, x):
+        out = self.cnn1(x)
+        out = self.relu1(out)
+        out = self.maxpool1(out)
+        out = self.cnn2(out)
+        out = self.relu2(out)
+        out = self.maxpool2(out)
+        out = out.view(out.size(0), -1)
+        out = self.fc1(out)
+        out = self.fc2(out)
+        out = self.output(out)
+        return out
